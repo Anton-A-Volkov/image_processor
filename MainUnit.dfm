@@ -20,7 +20,6 @@ object frmMain: TfrmMain
     Height = 81
     Align = alTop
     TabOrder = 0
-    ExplicitWidth = 1052
     DesignSize = (
       554
       81)
@@ -35,7 +34,6 @@ object frmMain: TfrmMain
       EditLabel.Caption = 'Folder with images:'
       TabOrder = 0
       Text = ''
-      ExplicitWidth = 1009
     end
     object btnSelectFolder: TButton
       Left = 494
@@ -46,7 +44,6 @@ object frmMain: TfrmMain
       Caption = '...'
       TabOrder = 1
       OnClick = btnSelectFolderClick
-      ExplicitLeft = 992
     end
   end
   object pcWorkspace: TPageControl
@@ -57,8 +54,6 @@ object frmMain: TfrmMain
     ActivePage = tsResize
     Align = alClient
     TabOrder = 1
-    ExplicitWidth = 1052
-    ExplicitHeight = 479
     object tsResize: TTabSheet
       Caption = 'Resize'
       object eNewWidth: TLabeledEdit
@@ -72,7 +67,7 @@ object frmMain: TfrmMain
         TabOrder = 0
         Text = ''
       end
-      object LabeledEdit1: TLabeledEdit
+      object eNewHeight: TLabeledEdit
         Left = 12
         Top = 112
         Width = 205
@@ -90,6 +85,7 @@ object frmMain: TfrmMain
         Height = 25
         Caption = 'GO!'
         TabOrder = 2
+        OnClick = btnResizeClick
       end
     end
   end
@@ -100,19 +96,16 @@ object frmMain: TfrmMain
     Height = 161
     Align = alBottom
     TabOrder = 2
-    ExplicitTop = 560
-    ExplicitWidth = 1052
     DesignSize = (
       554
       161)
-    object ProgressBar1: TProgressBar
+    object pbProgress: TProgressBar
       Left = 16
       Top = 8
       Width = 511
       Height = 17
       Anchors = [akLeft, akTop, akRight]
       TabOrder = 0
-      ExplicitWidth = 1009
     end
     object memLog: TMemo
       Left = 16
@@ -121,7 +114,6 @@ object frmMain: TfrmMain
       Height = 105
       Anchors = [akLeft, akTop, akRight, akBottom]
       TabOrder = 1
-      ExplicitWidth = 1009
     end
   end
   object dlgSelectFolder: TFileOpenDialog

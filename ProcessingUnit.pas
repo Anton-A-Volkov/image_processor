@@ -10,6 +10,8 @@ type
   private
     function GetImageFiles(const AFolder: string): TStringList;
   public
+    function ProcessResize(ADirectory : string; ANewWidth, ANewHeight : Integer;
+    AOnProgress : TProc<Integer, string>; AOnComplete : TProc) : Integer;
   end;
 
 var
@@ -47,6 +49,18 @@ begin
     Result.Free;
     raise;
   end;
+end;
+
+function TdmProcessing.ProcessResize(ADirectory: string; ANewWidth,
+  ANewHeight: Integer; AOnProgress: TProc<Integer, string>; AOnComplete: TProc) : Integer;
+var
+  FileList : TStringList;
+  Thread : TResizeThread;
+begin
+  Result := 0;
+  FileList := GetImageFiles(ADirectory);
+  Thread := TResizeThread.Create(FileList, ANewWidth, ANewHeight, AOnProgress, AOnComplete);
+  Thread.Start;
 end;
 
 end.
