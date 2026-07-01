@@ -11,15 +11,13 @@ type
     function GetImageFiles(const AFolder: string): TStringList;
   public
     function ProcessResize(ADirectory : string; ANewWidth, ANewHeight : Integer;
-    AOnProgress : TProc<Integer, string>; AOnComplete : TProc) : Integer;
+     ARewriteExisting : Boolean;AOnProgress : TProc<Integer, string>; AOnComplete : TProc) : Integer;
   end;
 
 var
   dmProcessing: TdmProcessing;
 
 implementation
-
-{%CLASSGROUP 'Vcl.Controls.TControl'}
 
 {$R *.dfm}
 
@@ -52,15 +50,15 @@ begin
 end;
 
 function TdmProcessing.ProcessResize(ADirectory: string; ANewWidth,
-  ANewHeight: Integer; AOnProgress: TProc<Integer, string>; AOnComplete: TProc) : Integer;
+  ANewHeight: Integer; ARewriteExisting : Boolean; AOnProgress: TProc<Integer, string>; AOnComplete: TProc) : Integer;
 var
-  FileList : TStringList;
-  Thread : TResizeThread;
+  slFileList : TStringList;
+  trThread : TResizeThread;
 begin
-  Result := 0;
-  FileList := GetImageFiles(ADirectory);
-  Thread := TResizeThread.Create(FileList, ANewWidth, ANewHeight, AOnProgress, AOnComplete);
-  Thread.Start;
+  slFileList := GetImageFiles(ADirectory);
+  Result := slFileList.Count;
+  trThread := TResizeThread.Create(slFileList, ANewWidth, ANewHeight, ARewriteExisting, AOnProgress, AOnComplete);
+  trThread.Start;
 end;
 
 end.

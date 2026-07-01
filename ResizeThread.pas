@@ -3,7 +3,7 @@ unit ResizeThread;
 interface
 
 uses
-  System.Classes, System.SysUtils, Vcl.Imaging.pngimage, Vcl.Imaging.jpeg, Vcl.Graphics;
+  System.Classes, System.SysUtils, Img32, Img32.Fmt.JPG, Img32.Fmt.BMP, Img32.Fmt.PNG, Img32.Fmt.GIF;
 
 type
   TResizeThread = class(TThread)
@@ -12,13 +12,14 @@ type
     FWidth, FHeight: Integer;
     FOnProgress: TProc<Integer, string>;
     FOnComplete: TProc;
+    FRewriteExisting : Boolean;
     procedure DoProgress(AIndex: Integer; const AMessage: string);
     procedure DoComplete;
   protected
     procedure Execute; override;
   public
     constructor Create(AFileList: TStringList; AWidth, AHeight: Integer;
-      AOnProgress: TProc<Integer, string>; AOnComplete: TProc);
+       ARewriteExisting : Boolean; AOnProgress: TProc<Integer, string>; AOnComplete: TProc);
     destructor Destroy; override;
   end;
 
@@ -27,7 +28,7 @@ implementation
 { TResizeThread }
 
 constructor TResizeThread.Create(AFileList: TStringList; AWidth,
-  AHeight: Integer; AOnProgress: TProc<Integer, string>; AOnComplete: TProc);
+  AHeight: Integer; ARewriteExisting : Boolean; AOnProgress: TProc<Integer, string>; AOnComplete: TProc);
 begin
   inherited Create(True);
   FFileList := AFileList;
@@ -48,7 +49,7 @@ end;
 procedure TResizeThread.DoComplete;
 begin
   if Assigned(FOnComplete) then
-    TThread.Queue(nil,
+    TThread.Synchronize(nil,
       procedure
       begin
         FOnComplete;
@@ -70,29 +71,25 @@ end;
 procedure TResizeThread.Execute;
 var
   i: Integer;
-  Picture: TPicture;
-  Bitmap: TBitmap;
-  OutputFileName: string;
+  imgNewImage : TImage32;
+  strOutputFileName: string;
+  strSuffix : string;
 begin
   NameThreadForDebugging('ResizeThread');
-  Picture := TPicture.Create;
-  Bitmap := TBitmap.Create;
+  imgNewImage := TImage32.Create;
+  if FRewriteExisting then
+    strSuffix := ''
+  else
+    strSuffix := '_resized';
   try
     for i := 0 to FFileList.Count - 1 do
     begin
       if Terminated then Break;
       try
-        Picture.LoadFromFile(FFileList[i]);
-        Bitmap.SetSize(FWidth, FHeight);
-        Bitmap.Canvas.StretchDraw(Rect(0, 0, FWidth, FHeight), Picture.Graphic);
-        OutputFileName := FFileList[i];
-        if SameText(ExtractFileExt(OutputFileName), '.png') then
-          Bitmap.SaveToFile(OutputFileName)
-        else
-        begin
-          Picture.Graphic := Bitmap;
-          Picture.SaveToFile(OutputFileName);
-        end;
+        imgNewImage.LoadFromFile(FFileList[i]);
+        imgNewImage.ScaleToFit(FWidth, FHeight);
+        strOutputFileName := ChangeFileExt(FFileList[i], '') + strSuffix + ExtractFileExt(FFileList[i]);
+        imgNewImage.SaveToFile(strOutputFileName);
       except
         on E: Exception do
           DoProgress(i, 'ERROR: ' + FFileList[i] + ' - ' + E.Message);
@@ -100,8 +97,7 @@ begin
       DoProgress(i, 'SUCCESS: ' + ExtractFileName(FFileList[i]));
     end;
   finally
-    Picture.Free;
-    Bitmap.Free;
+    imgNewImage.Free;
   end;
   DoComplete;
 end;
