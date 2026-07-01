@@ -3,7 +3,7 @@ unit MakeICOThread;
 interface
 
 uses
-  System.Classes, System.SysUtils, System.Types, System.Generics.Collections, System.Math, System.IOUtils,
+  System.Classes, System.SysUtils, System.Types, System.Generics.Collections,
   Img32, Img32.Fmt.BMP, Img32.Fmt.PNG, Img32.Fmt.JPG, Img32.Fmt.GIF, Img32.Transform;
 
 type

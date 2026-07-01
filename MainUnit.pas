@@ -3,9 +3,9 @@ unit MainUnit;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ComCtrls, Vcl.Mask,
-  Vcl.ExtCtrls, Vcl.Buttons, System.ImageList, Vcl.ImgList, PngImageList;
+  Vcl.ExtCtrls, Vcl.Buttons, System.ImageList, Vcl.ImgList;
 
 type
   TfrmMain = class(TForm)
@@ -22,7 +22,6 @@ type
     btnResize: TButton;
     dlgSelectFolder: TFileOpenDialog;
     cbRewriteExisting: TCheckBox;
-    ilIcons: TPngImageList;
     btnLockDimensions: TSpeedButton;
     lblResizeDescription: TLabel;
     tsMakeICO: TTabSheet;
@@ -31,6 +30,7 @@ type
     dlgSaveFile: TFileSaveDialog;
     cbICOFilterUniqueSizes: TCheckBox;
     btnMakeICO: TButton;
+    ilIcons: TImageList;
     procedure btnSelectFolderClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure btnResizeClick(Sender: TObject);
