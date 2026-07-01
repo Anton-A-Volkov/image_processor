@@ -63,6 +63,7 @@ object frmMain: TfrmMain
     ActivePage = tsResize
     Align = alClient
     TabOrder = 1
+    OnChange = pcWorkspaceChange
     object tsResize: TTabSheet
       Caption = 'Resize'
       object btnLockDimensions: TSpeedButton
@@ -124,6 +125,53 @@ object frmMain: TfrmMain
         OnClick = btnResizeClick
       end
     end
+    object tsMakeICO: TTabSheet
+      Caption = 'Make Windows ICOn'
+      ImageIndex = 1
+      DesignSize = (
+        546
+        158)
+      object eICOSaveFile: TLabeledEdit
+        Left = 12
+        Top = 32
+        Width = 511
+        Height = 23
+        EditLabel.Width = 73
+        EditLabel.Height = 15
+        EditLabel.Caption = 'Save result to:'
+        TabOrder = 0
+        Text = ''
+      end
+      object btnSelectResultFile: TButton
+        Left = 502
+        Top = 38
+        Width = 33
+        Height = 23
+        Anchors = [akTop, akRight]
+        Caption = '...'
+        TabOrder = 1
+        OnClick = btnSelectResultFileClick
+      end
+      object cbICOFilterUniqueSizes: TCheckBox
+        Left = 16
+        Top = 72
+        Width = 507
+        Height = 17
+        Caption = 'Filter unique sizes'
+        Checked = True
+        State = cbChecked
+        TabOrder = 2
+      end
+      object btnMakeICO: TButton
+        Left = 16
+        Top = 112
+        Width = 137
+        Height = 25
+        Caption = 'Make Windows ICOn'
+        TabOrder = 3
+        OnClick = btnMakeICOClick
+      end
+    end
   end
   object pnlLog: TPanel
     Left = 0
@@ -175,8 +223,8 @@ object frmMain: TfrmMain
     OkButtonLabel = 'Select'
     Options = [fdoPickFolders, fdoPathMustExist, fdoDontAddToRecent]
     Title = 'Select folder with images'
-    Left = 88
-    Top = 64
+    Left = 72
+    Top = 56
   end
   object ilIcons: TPngImageList
     DrawingStyle = dsTransparent
@@ -229,5 +277,13 @@ object frmMain: TfrmMain
     Left = 400
     Top = 56
     Bitmap = {}
+  end
+  object dlgSaveFile: TFileSaveDialog
+    FavoriteLinks = <>
+    FileTypes = <>
+    Options = [fdoOverWritePrompt, fdoPathMustExist, fdoShareAware]
+    Title = 'Seve result as ...'
+    Left = 288
+    Top = 64
   end
 end

@@ -3,7 +3,7 @@ unit ProcessingUnit;
 interface
 
 uses
-  System.SysUtils, System.Classes, ResizeThread;
+  System.SysUtils, System.Classes, ResizeThread, MakeICOThread;
 
 type
   TdmProcessing = class(TDataModule)
@@ -12,6 +12,8 @@ type
   public
     function ProcessResize(ADirectory : string; ANewWidth, ANewHeight : Integer;
      ARewriteExisting : Boolean;AOnProgress : TProc<Integer, string>; AOnComplete : TProc) : Integer;
+  function ProcessCreateICO(ADirectory : string; AOutputFile: string; AUniqueSizes: Boolean;
+    AOnProgress: TProc<Integer, string>; AOnComplete: TProc) : Integer;
   end;
 
 var
@@ -37,7 +39,7 @@ begin
         if (SearchRec.Attr and faDirectory) = 0 then
         begin
           Ext := LowerCase(ExtractFileExt(SearchRec.Name));
-          if (Ext = '.png') or (Ext = '.jpg') or (Ext = '.jpeg') or (Ext = '.bmp') then
+          if (Ext = '.png') or (Ext = '.jpg') or (Ext = '.jpeg') or (Ext = '.bmp') or (Ext = '.gif') then
             Result.Add(AFolder + '\' + SearchRec.Name);
         end;
       until FindNext(SearchRec) <> 0;
@@ -47,6 +49,19 @@ begin
     Result.Free;
     raise;
   end;
+end;
+
+function TdmProcessing.ProcessCreateICO(ADirectory, AOutputFile: string;
+  AUniqueSizes: Boolean; AOnProgress: TProc<Integer, string>;
+  AOnComplete: TProc): Integer;
+var
+  slFileList : TStringList;
+  trThread : TMakeICOThread;
+begin
+  slFileList := GetImageFiles(ADirectory);
+  Result := slFileList.Count;
+  trThread := TMakeICOThread.Create(slFileList, AOutputFile, AUniqueSizes, AOnProgress, AOnComplete);
+  trThread.Start;
 end;
 
 function TdmProcessing.ProcessResize(ADirectory: string; ANewWidth,

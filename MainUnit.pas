@@ -25,14 +25,23 @@ type
     ilIcons: TPngImageList;
     btnLockDimensions: TSpeedButton;
     lblResizeDescription: TLabel;
+    tsMakeICO: TTabSheet;
+    eICOSaveFile: TLabeledEdit;
+    btnSelectResultFile: TButton;
+    dlgSaveFile: TFileSaveDialog;
+    cbICOFilterUniqueSizes: TCheckBox;
+    btnMakeICO: TButton;
     procedure btnSelectFolderClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure btnResizeClick(Sender: TObject);
     procedure btnLockDimensionsClick(Sender: TObject);
     procedure eNewWidthChange(Sender: TObject);
     procedure eNewHeightChange(Sender: TObject);
+    procedure pcWorkspaceChange(Sender: TObject);
+    procedure btnSelectResultFileClick(Sender: TObject);
+    procedure btnMakeICOClick(Sender: TObject);
   private
-    { Private declarations }
+    FSaveFileEdit : TLabeledEdit;
   public
     { Public declarations }
   end;
@@ -49,6 +58,43 @@ uses ProcessingUnit;
 procedure TfrmMain.btnLockDimensionsClick(Sender: TObject);
 begin
   btnLockDimensions.ImageIndex := Integer(btnLockDimensions.Down);
+end;
+
+procedure TfrmMain.btnMakeICOClick(Sender: TObject);
+var
+  Folder: string;
+  FileCount : Integer;
+begin
+  Folder := eFolderPath.Text;
+  if not DirectoryExists(Folder) then
+  begin
+    memLog.Lines.Add('Folder not exists');
+    Exit;
+  end;
+
+  pbProgress.Position := 0;
+  memLog.Clear;
+  btnMakeICO.Enabled := False;
+
+  FileCount := dmProcessing.ProcessCreateICO(Folder, eICOSaveFile.Text,
+    cbICOFilterUniqueSizes.Checked,
+    procedure(AIndex: Integer; AMessage: string)
+    begin
+      pbProgress.Position := AIndex + 1;
+      memLog.Lines.Add(AMessage);
+    end,
+    procedure
+    begin
+      btnMakeICO.Enabled := True;
+      memLog.Lines.Add('SUCCESS: Icon creation is completed.');
+    end);
+  pbProgress.Max := FileCount;
+
+  if FileCount = 0 then
+  begin
+    memLog.Lines.Add('ERROR: No files to make icon.');
+    btnMakeICO.Enabled := True;
+  end;
 end;
 
 procedure TfrmMain.btnResizeClick(Sender: TObject);
@@ -96,6 +142,13 @@ begin
   end;
 end;
 
+procedure TfrmMain.btnSelectResultFileClick(Sender: TObject);
+begin
+  if dlgSaveFile.Execute then
+    if Assigned(FSaveFileEdit) then
+      FSaveFileEdit.Text := dlgSaveFile.FileName;
+end;
+
 procedure TfrmMain.eNewHeightChange(Sender: TObject);
 begin
   if btnLockDimensions.Down then
@@ -112,6 +165,23 @@ procedure TfrmMain.FormCreate(Sender: TObject);
 begin
   btnSelectFolder.Parent := eFolderPath;
   btnSelectFolder.Align := alRight;
+end;
+
+procedure TfrmMain.pcWorkspaceChange(Sender: TObject);
+var
+  NewFileType : TFileTypeItem;
+begin
+  if pcWorkspace.ActivePage = tsMakeICO then
+  begin
+    btnSelectResultFile.Parent := eICOSaveFile;
+    btnSelectResultFile.Align := alRight;
+    dlgSaveFile.FileTypes.Clear;
+    NewFileType := dlgSaveFile.FileTypes.Add;
+    NewFileType.DisplayName := 'ICO files';
+    NewFileType.FileMask := '*.ico';
+    dlgSaveFile.DefaultExtension := 'ico';
+    FSaveFileEdit := eICOSaveFile;
+  end;
 end;
 
 end.
