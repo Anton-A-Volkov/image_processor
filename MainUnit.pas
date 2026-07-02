@@ -3,9 +3,9 @@ unit MainUnit;
 interface
 
 uses
-  System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ComCtrls, Vcl.Mask,
-  Vcl.ExtCtrls, Vcl.Buttons, System.ImageList, Vcl.ImgList;
+  SysUtils, Variants, Classes, Graphics,
+  Controls, Forms, Dialogs, StdCtrls, ComCtrls,
+  ExtCtrls, Buttons, ImageList, ImgList, Mask;
 
 type
   TfrmMain = class(TForm)

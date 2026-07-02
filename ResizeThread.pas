@@ -3,7 +3,7 @@ unit ResizeThread;
 interface
 
 uses
-  System.Classes, System.SysUtils, Img32, Img32.Fmt.JPG, Img32.Fmt.BMP, Img32.Fmt.PNG, Img32.Fmt.GIF;
+  Classes, SysUtils, Img32, Img32.Fmt.JPG, Img32.Fmt.BMP, Img32.Fmt.PNG, Img32.Fmt.GIF;
 
 type
   TResizeThread = class(TThread)

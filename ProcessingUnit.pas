@@ -3,7 +3,7 @@ unit ProcessingUnit;
 interface
 
 uses
-  System.SysUtils, System.Classes, ResizeThread, MakeICOThread;
+  SysUtils, Classes, ResizeThread, MakeICOThread;
 
 type
   TdmProcessing = class(TDataModule)
