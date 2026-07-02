@@ -201,39 +201,6 @@ object frmMain: TfrmMain
       TabOrder = 1
     end
   end
-  object dlgSelectFolder: TFileOpenDialog
-    FavoriteLinks = <>
-    FileTypes = <
-      item
-        DisplayName = 'BMP image'
-        FileMask = '*.bmp'
-      end
-      item
-        DisplayName = 'PNG image'
-        FileMask = '*.png'
-      end
-      item
-        DisplayName = 'JPG image'
-        FileMask = '*.jpg;*.jpeg'
-      end
-      item
-        DisplayName = 'GIF image'
-        FileMask = '*.gif'
-      end>
-    OkButtonLabel = 'Select'
-    Options = [fdoPickFolders, fdoPathMustExist, fdoDontAddToRecent]
-    Title = 'Select folder with images'
-    Left = 72
-    Top = 56
-  end
-  object dlgSaveFile: TFileSaveDialog
-    FavoriteLinks = <>
-    FileTypes = <>
-    Options = [fdoOverWritePrompt, fdoPathMustExist, fdoShareAware]
-    Title = 'Seve result as ...'
-    Left = 288
-    Top = 64
-  end
   object ilIcons: TImageList
     ColorDepth = cd32Bit
     Height = 24
@@ -544,5 +511,11 @@ object frmMain: TfrmMain
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       000000000000}
+  end
+  object dlgSave: TSaveDialog
+    Options = [ofOverwritePrompt, ofHideReadOnly, ofPathMustExist, ofEnableSizing]
+    Title = 'Seve result as ...'
+    Left = 200
+    Top = 64
   end
 end

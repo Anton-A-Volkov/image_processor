@@ -5,7 +5,7 @@ interface
 uses
   SysUtils, Variants, Classes, Graphics,
   Controls, Forms, Dialogs, StdCtrls, ComCtrls,
-  ExtCtrls, Buttons, ImageList, ImgList, Mask;
+  ExtCtrls, Buttons, ImageList, ImgList, Mask, FileCtrl;
 
 type
   TfrmMain = class(TForm)
@@ -20,17 +20,16 @@ type
     eNewWidth: TLabeledEdit;
     eNewHeight: TLabeledEdit;
     btnResize: TButton;
-    dlgSelectFolder: TFileOpenDialog;
     cbRewriteExisting: TCheckBox;
     btnLockDimensions: TSpeedButton;
     lblResizeDescription: TLabel;
     tsMakeICO: TTabSheet;
     eICOSaveFile: TLabeledEdit;
     btnSelectResultFile: TButton;
-    dlgSaveFile: TFileSaveDialog;
     cbICOFilterUniqueSizes: TCheckBox;
     btnMakeICO: TButton;
     ilIcons: TImageList;
+    dlgSave: TSaveDialog;
     procedure btnSelectFolderClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure btnResizeClick(Sender: TObject);
@@ -135,18 +134,21 @@ begin
 end;
 
 procedure TfrmMain.btnSelectFolderClick(Sender: TObject);
+var
+  strSelectedDir : string;
+  SelectDirOptions : TSelectDirOpts;
 begin
-  if dlgSelectFolder.Execute then
+  IF SelectDirectory(strSelectedDir, [sdAllowCreate, sdPrompt], 0) then
   begin
-    eFolderPath.Text := dlgSelectFolder.FileName;
+    eFolderPath.Text := strSelectedDir;
   end;
 end;
 
 procedure TfrmMain.btnSelectResultFileClick(Sender: TObject);
 begin
-  if dlgSaveFile.Execute then
+  if dlgSave.Execute then
     if Assigned(FSaveFileEdit) then
-      FSaveFileEdit.Text := dlgSaveFile.FileName;
+      FSaveFileEdit.Text := dlgSave.FileName;
 end;
 
 procedure TfrmMain.eNewHeightChange(Sender: TObject);
@@ -165,21 +167,17 @@ procedure TfrmMain.FormCreate(Sender: TObject);
 begin
   btnSelectFolder.Parent := eFolderPath;
   btnSelectFolder.Align := alRight;
+  pcWorkspaceChange(Sender);
 end;
 
 procedure TfrmMain.pcWorkspaceChange(Sender: TObject);
-var
-  NewFileType : TFileTypeItem;
 begin
   if pcWorkspace.ActivePage = tsMakeICO then
   begin
     btnSelectResultFile.Parent := eICOSaveFile;
     btnSelectResultFile.Align := alRight;
-    dlgSaveFile.FileTypes.Clear;
-    NewFileType := dlgSaveFile.FileTypes.Add;
-    NewFileType.DisplayName := 'ICO files';
-    NewFileType.FileMask := '*.ico';
-    dlgSaveFile.DefaultExtension := 'ico';
+    dlgSave.Filter := 'ICO files|*.ico';
+    dlgSave.DefaultExt := 'ico';
     FSaveFileEdit := eICOSaveFile;
   end;
 end;
