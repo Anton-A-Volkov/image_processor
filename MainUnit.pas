@@ -5,7 +5,12 @@ interface
 uses
   SysUtils, Variants, Classes, Graphics,
   Controls, Forms, Dialogs, StdCtrls, ComCtrls,
-  ExtCtrls, Buttons, ImageList, ImgList, Mask, FileCtrl;
+  ExtCtrls, Buttons, FileCtrl,
+  {$IFDEF FPC}
+    Masks, ImgList
+  {$ELSE}
+    Mask, ImageList, ImgList
+  {$ENDIF};
 
 type
   TfrmMain = class(TForm)
