@@ -15,7 +15,7 @@ interface
 {$I Img32.inc}
 
 uses
-  {$IFDEF MSWINDOWS} Windows,{$ENDIF} SysUtils, Classes, Math, Img32;
+  {$IFDEF MSWINDOWS} Windows, LCLIntf, LCLType, LMessages,{$ENDIF} SysUtils, Classes, Math, Img32;
 
 type
 

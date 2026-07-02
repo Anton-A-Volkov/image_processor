@@ -1,29 +1,38 @@
 unit MakeICOThread;
 
+{$MODE Delphi}
+
 interface
 
 uses
   Classes, SysUtils, Types, Generics.Collections,
-  Img32, Img32.Fmt.BMP, Img32.Fmt.PNG, Img32.Fmt.JPG, Img32.Fmt.GIF, Img32.Transform;
+  Img32, Img32.Fmt.BMP, Img32.Fmt.PNG, Img32.Fmt.JPG, Img32.Transform;
 
 type
+  TOnProgressEvent = procedure(AIndex: Integer; const AMessage: string) of object;
+  TOnCompleteEvent = procedure of object;
+
   TMakeICOThread = class(TThread)
   private
+    FProgressIndex : Integer;
+    FProgressMessage : string;
     FFileList: TStringList;
     FOutputFile: string;
     FUniqueSizes: Boolean;
-    FOnProgress: TProc<Integer, string>;
-    FOnComplete: TProc;
-    procedure DoProgress(AIndex: Integer; AMessage: string);
+    FOnProgress: TOnProgressEvent;
+    FOnComplete: TOnCompleteEvent;
+    procedure DoProgress(AIndex: Integer; const AMessage: string);
     procedure DoComplete;
+    procedure SyncComplete;
+    procedure SyncProgress;
     function LoadImage(const AFileName: string): TImage32;
     procedure WriteICO(const AImages: TDictionary<TSize, TImage32>);
   protected
     procedure Execute; override;
   public
     constructor Create(AFileList: TStringList; const AOutputFile: string;
-      AUniqueSizes: Boolean; AOnProgress: TProc<Integer, string>;
-      AOnComplete: TProc);
+      AUniqueSizes: Boolean; AOnProgress: TOnProgressEvent;
+      AOnComplete: TOnCompleteEvent);
     destructor Destroy; override;
   end;
 
@@ -64,7 +73,7 @@ implementation
 
 constructor TMakeICOThread.Create(AFileList: TStringList;
   const AOutputFile: string; AUniqueSizes: Boolean;
-  AOnProgress: TProc<Integer, string>; AOnComplete: TProc);
+  AOnProgress: TOnProgressEvent; AOnComplete: TOnCompleteEvent);
 begin
   inherited Create(True);
   FFileList := AFileList;
@@ -84,23 +93,29 @@ end;
 procedure TMakeICOThread.DoComplete;
 begin
   if Assigned(FOnComplete) then
-    TThread.Synchronize(nil,
-      procedure
-      begin
-        FOnComplete;
-      end
-    );
+    TThread.Synchronize(nil, SyncComplete);
 end;
 
-procedure TMakeICOThread.DoProgress(AIndex: Integer; AMessage: string);
+procedure TMakeICOThread.SyncComplete;
+begin
+  if Assigned(FOnComplete) then
+    FOnComplete;
+end;
+
+procedure TMakeICOThread.DoProgress(AIndex: Integer; const AMessage: string);
 begin
   if Assigned(FOnProgress) then
-    TThread.Queue(nil,
-      procedure
-      begin
-        FOnProgress(AIndex, AMessage);
-      end
-    );
+  begin
+    FProgressMessage := AMessage;
+    FProgressIndex := AIndex;
+    TThread.Queue(nil, SyncProgress);
+  end;
+end;
+
+procedure TMakeICOThread.SyncProgress;
+begin
+  if Assigned(FOnProgress) then
+    FOnProgress(FProgressIndex, FProgressMessage);
 end;
 
 procedure TMakeICOThread.Execute;

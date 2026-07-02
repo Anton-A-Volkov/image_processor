@@ -1,0 +1,234 @@
+object frmMain: TfrmMain
+  Left = 0
+  Height = 450
+  Top = 0
+  Width = 554
+  Caption = 'Image Processor'
+  ClientHeight = 450
+  ClientWidth = 554
+  Color = clBtnFace
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Position = poScreenCenter
+  LCLVersion = '4.8.0.0'
+  OnCreate = FormCreate
+  object pnlGetDirectory: TPanel
+    Left = 0
+    Height = 101
+    Top = 0
+    Width = 554
+    Align = alTop
+    ClientHeight = 101
+    ClientWidth = 554
+    ParentBackground = False
+    TabOrder = 0
+    object eFolderPath: TLabeledEdit
+      Left = 16
+      Height = 23
+      Top = 30
+      Width = 511
+      Anchors = [akTop, akLeft, akRight]
+      EditLabel.Height = 15
+      EditLabel.Width = 511
+      EditLabel.Caption = 'Folder with images:'
+      TabOrder = 0
+    end
+    object btnSelectFolder: TButton
+      Left = 494
+      Height = 23
+      Top = 30
+      Width = 33
+      Anchors = [akTop, akRight]
+      Caption = '...'
+      TabOrder = 1
+      OnClick = btnSelectFolderClick
+    end
+    object cbRewriteExisting: TCheckBox
+      Left = 16
+      Height = 19
+      Top = 68
+      Width = 511
+      Anchors = [akTop, akLeft, akRight]
+      Caption = 'Rewrite existing files with processed images'
+      TabOrder = 2
+    end
+  end
+  object pcWorkspace: TPageControl
+    Left = 0
+    Height = 188
+    Top = 101
+    Width = 554
+    ActivePage = tsResize
+    Align = alClient
+    TabIndex = 0
+    TabOrder = 1
+    OnChange = pcWorkspaceChange
+    object tsResize: TTabSheet
+      Caption = 'Resize'
+      ClientHeight = 160
+      ClientWidth = 546
+      object btnLockDimensions: TSpeedButton
+        Left = 188
+        Height = 26
+        Top = 40
+        Width = 26
+        AllowAllUp = True
+        Down = True
+        Flat = True
+        GroupIndex = 1
+        Images = ilIcons
+        ImageIndex = 1
+        OnClick = btnLockDimensionsClick
+      end
+      object lblResizeDescription: TLabel
+        Left = 16
+        Height = 41
+        Top = 112
+        Width = 505
+        Alignment = taCenter
+        AutoSize = False
+        Caption = 'Resizes images with preserving aspect ratio to fit one of the dimensions.'
+        Layout = tlCenter
+      end
+      object eNewWidth: TLabeledEdit
+        Left = 12
+        Height = 23
+        Top = 40
+        Width = 170
+        EditLabel.Height = 15
+        EditLabel.Width = 170
+        EditLabel.Caption = 'New width, px:'
+        TabOrder = 0
+        Text = '1024'
+        OnChange = eNewWidthChange
+      end
+      object eNewHeight: TLabeledEdit
+        Left = 219
+        Height = 23
+        Top = 40
+        Width = 170
+        EditLabel.Height = 15
+        EditLabel.Width = 170
+        EditLabel.Caption = 'New height, px:'
+        TabOrder = 1
+        Text = '1024'
+        OnChange = eNewHeightChange
+      end
+      object btnResize: TButton
+        Left = 448
+        Height = 25
+        Top = 39
+        Width = 75
+        Caption = 'GO!'
+        TabOrder = 2
+        OnClick = btnResizeClick
+      end
+    end
+    object tsMakeICO: TTabSheet
+      Caption = 'Make Windows ICOn'
+      ClientHeight = 160
+      ClientWidth = 546
+      ImageIndex = 1
+      object eICOSaveFile: TLabeledEdit
+        Left = 12
+        Height = 23
+        Top = 32
+        Width = 511
+        EditLabel.Height = 15
+        EditLabel.Width = 511
+        EditLabel.Caption = 'Save result to:'
+        TabOrder = 0
+      end
+      object btnSelectResultFile: TButton
+        Left = 494
+        Height = 23
+        Top = 38
+        Width = 33
+        Anchors = [akTop, akRight]
+        Caption = '...'
+        TabOrder = 1
+        OnClick = btnSelectResultFileClick
+      end
+      object cbICOFilterUniqueSizes: TCheckBox
+        Left = 16
+        Height = 19
+        Top = 72
+        Width = 111
+        Caption = 'Filter unique sizes'
+        Checked = True
+        State = cbChecked
+        TabOrder = 2
+      end
+      object btnMakeICO: TButton
+        Left = 16
+        Height = 25
+        Top = 112
+        Width = 137
+        Caption = 'Make Windows ICOn'
+        TabOrder = 3
+        OnClick = btnMakeICOClick
+      end
+    end
+  end
+  object pnlLog: TPanel
+    Left = 0
+    Height = 161
+    Top = 289
+    Width = 554
+    Align = alBottom
+    ClientHeight = 161
+    ClientWidth = 554
+    ParentBackground = False
+    TabOrder = 2
+    object pbProgress: TProgressBar
+      Left = 16
+      Height = 17
+      Top = 8
+      Width = 511
+      Anchors = [akTop, akLeft, akRight]
+      TabOrder = 0
+    end
+    object memLog: TMemo
+      Left = 16
+      Height = 105
+      Top = 40
+      Width = 511
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      ScrollBars = ssVertical
+      TabOrder = 1
+    end
+  end
+  object ilIcons: TImageList
+    Height = 24
+    Width = 24
+    Left = 408
+    Top = 64
+    Bitmap = {
+      4C7A020000001800000018000000130200000000000078DACD974B28445118C7
+      AF77CA5B248F585B51242B16961636ACD8896C3C865878CC727616566AAC941A
+      E3999D67D948B16588BC12B2B0192546C3FFD47FEA1673EEBDE7CE895BBF9A3A
+      DFF7EBDC73CFF9CE3786617C197F4F14EC836930C3DFD104B92F419DF1F3A905
+      172EDDCFA002E48159700F5EC0022801C5E0C985BF1FA482C35FC6CE4026E873
+      E12F036D92F125B0ACE8FE0049C0AB69CFBCF13BFA34B8B7C138FD4D60CC022F
+      73ECB83DF466807C9B6430C763E10E71CD8740C4C1FB8AD801E69E49E2029C47
+      48614D43CC0D4862E61973A978CE0D3A54FD1F4487FF1614B126DC69F06F9A6A
+      DB9606BFA8C73524AA69FD9B89AEEFDBCF7DAEEA5F64CCA9C2FE3C61EEA22446
+      DC47C9A007BC3A708BD86EE65ADD69933CE74E9F24E6DA99CF21EBF2984D7C71
+      EEB8FF44181C917002BD0FA0D354E3637743177874E9BEE21D5FC0750E9251F6
+      2CE58C51EDD9EA41559C7A76032A4183622FB7C3B5D890C4AC33664FC13F01D2
+      25F55EF00ED2C09482BF973DA0555C09639DFA458D28B51157CA58BB5EF1CE07
+      A085BD47D0827CC61E3057E6BE06D586FA534D473C7F2B28046BE0D821ABCC6D
+      95F8B3C0888BF3384C47BC71C365BFECA543C52FCEE81C896AF02F99BEE38A06
+      FFAEC9BFA7C11F31F9231AFC9F20857C6AF0C7FA97A0A6FD9388FD9903065DF8
+      456F972B196F07D9C0CFFF6B4EF033B7C3E22E6F7451DF1AE9B0BA77CF15E67F
+      FEDBB9FE068D799617
+    }
+  end
+  object dlgSave: TSaveDialog
+    Title = 'Seve result as ...'
+    Options = [ofOverwritePrompt, ofHideReadOnly, ofPathMustExist, ofEnableSizing]
+    Left = 200
+    Top = 64
+  end
+end

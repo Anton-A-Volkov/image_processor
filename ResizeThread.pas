@@ -1,25 +1,34 @@
 unit ResizeThread;
 
+{$MODE Delphi}
+
 interface
 
 uses
-  Classes, SysUtils, Img32, Img32.Fmt.JPG, Img32.Fmt.BMP, Img32.Fmt.PNG, Img32.Fmt.GIF;
+  Classes, SysUtils, Img32, Img32.Fmt.JPG, Img32.Fmt.BMP, Img32.Fmt.PNG;
 
 type
+  TOnProgressEvent = procedure(AIndex: Integer; const AMessage: string) of object;
+  TOnCompleteEvent = procedure of object;
+
   TResizeThread = class(TThread)
   private
+    FProgressIndex : Integer;
+    FProgressMessage : string;
     FFileList: TStringList;
     FWidth, FHeight: Integer;
-    FOnProgress: TProc<Integer, string>;
-    FOnComplete: TProc;
+    FOnProgress: TOnProgressEvent;
+    FOnComplete: TOnCompleteEvent;
     FRewriteExisting : Boolean;
     procedure DoProgress(AIndex: Integer; const AMessage: string);
     procedure DoComplete;
+    procedure SyncComplete;
+    procedure SyncProgress;
   protected
     procedure Execute; override;
   public
     constructor Create(AFileList: TStringList; AWidth, AHeight: Integer;
-       ARewriteExisting : Boolean; AOnProgress: TProc<Integer, string>; AOnComplete: TProc);
+       ARewriteExisting : Boolean; AOnProgress: TOnProgressEvent; AOnComplete: TOnCompleteEvent);
     destructor Destroy; override;
   end;
 
@@ -28,7 +37,7 @@ implementation
 { TResizeThread }
 
 constructor TResizeThread.Create(AFileList: TStringList; AWidth,
-  AHeight: Integer; ARewriteExisting : Boolean; AOnProgress: TProc<Integer, string>; AOnComplete: TProc);
+  AHeight: Integer; ARewriteExisting : Boolean; AOnProgress: TOnProgressEvent; AOnComplete: TOnCompleteEvent);
 begin
   inherited Create(True);
   FFileList := AFileList;
@@ -49,23 +58,29 @@ end;
 procedure TResizeThread.DoComplete;
 begin
   if Assigned(FOnComplete) then
-    TThread.Synchronize(nil,
-      procedure
-      begin
-        FOnComplete;
-      end
-    );
+    TThread.Synchronize(nil, SyncComplete);
+end;
+
+procedure TResizeThread.SyncComplete;
+begin
+  if Assigned(FOnComplete) then
+    FOnComplete;
 end;
 
 procedure TResizeThread.DoProgress(AIndex: Integer; const AMessage: string);
 begin
   if Assigned(FOnProgress) then
-    TThread.Queue(nil,
-      procedure
-      begin
-        FOnProgress(AIndex, AMessage);
-      end
-    );
+  begin
+    FProgressMessage := AMessage;
+    FProgressIndex := AIndex;
+    TThread.Queue(nil, SyncProgress);
+  end;
+end;
+
+procedure TResizeThread.SyncProgress;
+begin
+  if Assigned(FOnProgress) then
+    FOnProgress(FProgressIndex, FProgressMessage);
 end;
 
 procedure TResizeThread.Execute;

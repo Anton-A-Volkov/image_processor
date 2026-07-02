@@ -11,14 +11,10 @@ unit Img32.Fmt.GIF;
 
 interface
 {$I Img32.inc}
-{$IF COMPILERVERSION = 15}
-implementation
-{$ELSE}
 
 uses
-  SysUtils, Classes, Windows, Math, Img32,
-  {$IFDEF USES_NAMESPACES} Vcl.Graphics, {$ELSE}Graphics, {$ENDIF}
-  {$IFDEF DELPHI_GIF} GifImg {$ELSE} GifImage {$ENDIF};
+  SysUtils, Classes, LCLIntf, LCLType, LMessages, Math, Img32,
+  {$IFDEF USES_NAMESPACES} Vcl.Graphics, {$ELSE}Graphics;
 
 type
 
@@ -201,7 +197,6 @@ end;
 initialization
   TImage32.RegisterImageFormatClass('GIF', TImageFormat_GIF, cpLow);
 
-{$IFEND}
 end.
 
 

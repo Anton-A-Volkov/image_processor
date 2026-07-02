@@ -1,5 +1,7 @@
 unit MainUnit;
 
+{$MODE Delphi}
+
 interface
 
 uses
@@ -13,6 +15,8 @@ uses
   {$ENDIF};
 
 type
+  { TfrmMain }
+
   TfrmMain = class(TForm)
     pnlGetDirectory: TPanel;
     eFolderPath: TLabeledEdit;
@@ -44,6 +48,9 @@ type
     procedure pcWorkspaceChange(Sender: TObject);
     procedure btnSelectResultFileClick(Sender: TObject);
     procedure btnMakeICOClick(Sender: TObject);
+    procedure DoOnProcess(AIndex : Integer; const AMessage : string);
+    procedure DoOnResizeComplete;
+    procedure DoOnMakeICOComplete;
   private
     FSaveFileEdit : TLabeledEdit;
   public
@@ -57,7 +64,7 @@ implementation
 
 uses ProcessingUnit;
 
-{$R *.dfm}
+{$R *.lfm}
 
 procedure TfrmMain.btnLockDimensionsClick(Sender: TObject);
 begin
@@ -82,16 +89,8 @@ begin
 
   FileCount := dmProcessing.ProcessCreateICO(Folder, eICOSaveFile.Text,
     cbICOFilterUniqueSizes.Checked,
-    procedure(AIndex: Integer; AMessage: string)
-    begin
-      pbProgress.Position := AIndex + 1;
-      memLog.Lines.Add(AMessage);
-    end,
-    procedure
-    begin
-      btnMakeICO.Enabled := True;
-      memLog.Lines.Add('SUCCESS: Icon creation is completed.');
-    end);
+    DoOnProcess,
+    DoOnMakeICOComplete);
   pbProgress.Max := FileCount;
 
   if FileCount = 0 then
@@ -99,6 +98,24 @@ begin
     memLog.Lines.Add('ERROR: No files to make icon.');
     btnMakeICO.Enabled := True;
   end;
+end;
+
+procedure TfrmMain.DoOnProcess(AIndex: Integer; const AMessage: string);
+begin
+  pbProgress.Position := AIndex + 1;
+  memLog.Lines.Add(AMessage);
+end;
+
+procedure TfrmMain.DoOnResizeComplete;
+begin
+  btnResize.Enabled := True;
+  memLog.Lines.Add('SUCCESS: Resizing is completed.');
+end;
+
+procedure TfrmMain.DoOnMakeICOComplete;
+begin
+  btnMakeICO.Enabled := True;
+  memLog.Lines.Add('SUCCESS: Icon creation is completed.');
 end;
 
 procedure TfrmMain.btnResizeClick(Sender: TObject);
@@ -119,16 +136,8 @@ begin
 
   FileCount := dmProcessing.ProcessResize(Folder, StrToIntDef(eNewWidth.Text, 1024),
     StrToIntDef(eNewHeight.Text, 1024), cbRewriteExisting.Checked,
-    procedure(AIndex: Integer; AMessage: string)
-    begin
-      pbProgress.Position := AIndex + 1;
-      memLog.Lines.Add(AMessage);
-    end,
-    procedure
-    begin
-      btnResize.Enabled := True;
-      memLog.Lines.Add('SUCCESS: Resizing is completed.');
-    end);
+    DoOnProcess, DoOnResizeComplete);
+
   pbProgress.Max := FileCount;
 
   if FileCount = 0 then

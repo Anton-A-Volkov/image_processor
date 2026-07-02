@@ -1,0 +1,38 @@
+ Progress: Найдены все файлы модулей
+ImageProcessor.dpr Note: Модуль "Vcl.Styles" в выражении Uses заменён на "Styles".
+ImageProcessor.dpr Note: Модуль "Vcl.Themes" в выражении Uses заменён на "Themes".
+ImageProcessor.dpr Note: Модуль "Vcl.Forms" в выражении Uses заменён на "Forms".
+ImageProcessor.lpr(1,24) Note: После имени модуля добавлена директива MODE Delphi.
+ : 
+ : *** Преобразование файлов модулей, принадлежащих проекту/пакету ***
+MainUnit.pas(1,15) Note: После имени модуля добавлена директива MODE Delphi.
+ProcessingUnit.pas(1,21) Note: После имени модуля добавлена директива MODE Delphi.
+ResizeThread.pas(1,19) Note: После имени модуля добавлена директива MODE Delphi.
+MakeICOThread.pas(1,20) Note: После имени модуля добавлена директива MODE Delphi.
+ : 
+ : *** Преобразование вновь обнаруженных файлов модулей ***
+Img32.Fmt.BMP.pas Note: Исправление включаемых файлов: Img32.inc
+Img32.Fmt.BMP.pas Note: Модуль "Windows" в выражении Uses заменён на "LCLIntf, LCLType, LMessages".
+Img32.Fmt.GIF.pas Note: Исправление включаемых файлов: Img32.inc
+Img32.Fmt.GIF.pas Note: Модуль "GifImage" удалён из выражения Uses.
+Img32.Fmt.GIF.pas Note: Модуль "Windows" в выражении Uses заменён на "LCLIntf, LCLType, LMessages".
+Img32.Fmt.JPG.pas Note: Исправление включаемых файлов: Img32.inc
+Img32.Fmt.JPG.pas(1,20) Note: После имени модуля добавлена директива MODE Delphi.
+Img32.Fmt.PNG.pas Note: Исправление включаемых файлов: Img32.inc
+Img32.pas Note: Исправление включаемых файлов: Img32.inc
+Img32.pas Note: Модуль "Windows" в выражении Uses заменён на "LCLIntf, LCLType, LMessages".
+Img32.Transform.pas Note: Исправление включаемых файлов: Img32.inc
+ : 
+ : *** Исправление списков используемых модулей и файлов форм ***
+MainUnit.pas Note: Изменена координата Top компонента TMemo с "40" на "38" внутри TPanel.
+MainUnit.pas Note: Изменена координата Left компонента TMemo с "16" на "14" внутри TPanel.
+MainUnit.pas Note: Изменена координата Top компонента TProgressBar с "8" на "6" внутри TPanel.
+MainUnit.pas Note: Изменена координата Left компонента TProgressBar с "16" на "14" внутри TPanel.
+MainUnit.pas Note: Изменена координата Top компонента TCheckBox с "68" на "66" внутри TPanel.
+MainUnit.pas Note: Изменена координата Left компонента TCheckBox с "16" на "14" внутри TPanel.
+MainUnit.pas Note: Изменена координата Top компонента TButton с "30" на "28" внутри TPanel.
+MainUnit.pas Note: Изменена координата Left компонента TButton с "494" на "492" внутри TPanel.
+MainUnit.pas Note: Изменена координата Top компонента TLabeledEdit с "30" на "28" внутри TPanel.
+MainUnit.pas Note: Изменена координата Left компонента TLabeledEdit с "16" на "14" внутри TPanel.
+ Progress: Преобразование заняло: 00:00:52
+ : Преобразование завершено.

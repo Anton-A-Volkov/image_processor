@@ -16,7 +16,7 @@ interface
 
 uses
   Types, SysUtils, Classes,
-  {$IFDEF MSWINDOWS} Windows,{$ENDIF}
+  {$IFDEF MSWINDOWS} Windows, LCLIntf, LCLType, LMessages,{$ENDIF}
   {$IFDEF USING_VCL_LCL}
     {$IFDEF USES_NAMESPACES} Vcl.Graphics, Vcl.Forms,
     {$ELSE}Graphics, Forms,
@@ -200,6 +200,11 @@ type
     class function PasteFromClipboard(img32: TImage32): Boolean; virtual; abstract;
   end;
 
+  {$IFDEF FPC}
+  TWinBlendFunction = BLENDFUNCTION;
+  {$ELSE}
+  TWinBlendFunction = Windows.TBlendFunction;
+  {$ENDIF}
   TBlendFunction = function(bgColor, fgColor: TColor32): TColor32;
   TBlendLineFunction = procedure(bgColor, fgColor: PColor32; width: nativeint);
 
@@ -569,7 +574,7 @@ type
 {$IFDEF MSWINDOWS}
   {$IFDEF FPC}
   function AlphaBlend(DC: HDC; p2, p3, p4, p5: Integer;
-    DC6: HDC; p7, p8, p9, p10: Integer; p11: Windows.TBlendFunction): BOOL;
+    DC6: HDC; p7, p8, p9, p10: Integer; p11: TWinBlendFunction): BOOL;
     stdcall; external 'msimg32.dll' name 'AlphaBlend';
   {$ENDIF}
 {$ENDIF}
@@ -3488,7 +3493,7 @@ var
   pDst, pSrc: PARGB;
   memDc: HDC;
   isTransparent: Boolean;
-  bf: BLENDFUNCTION;
+  bf: TWinBlendFunction;
   oldStretchBltMode: integer;
 begin
   Types.IntersectRect(rec, srcRect, Bounds);

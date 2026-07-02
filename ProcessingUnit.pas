@@ -1,19 +1,24 @@
 unit ProcessingUnit;
 
+{$MODE Delphi}
+
 interface
 
 uses
   SysUtils, Classes, ResizeThread, MakeICOThread;
 
 type
+  TOnProgressEvent = procedure(AIndex: Integer; const AMessage: string) of object;
+  TOnCompleteEvent = procedure of object;
+
   TdmProcessing = class(TDataModule)
   private
     function GetImageFiles(const AFolder: string): TStringList;
   public
     function ProcessResize(ADirectory : string; ANewWidth, ANewHeight : Integer;
-     ARewriteExisting : Boolean;AOnProgress : TProc<Integer, string>; AOnComplete : TProc) : Integer;
+     ARewriteExisting : Boolean;AOnProgress : TOnProgressEvent; AOnComplete : TOnCompleteEvent) : Integer;
   function ProcessCreateICO(ADirectory : string; AOutputFile: string; AUniqueSizes: Boolean;
-    AOnProgress: TProc<Integer, string>; AOnComplete: TProc) : Integer;
+    AOnProgress: TOnProgressEvent; AOnComplete: TOnCompleteEvent) : Integer;
   end;
 
 var
@@ -21,7 +26,7 @@ var
 
 implementation
 
-{$R *.dfm}
+{$R *.lfm}
 
 { TdmProcessing }
 
@@ -39,7 +44,7 @@ begin
         if (SearchRec.Attr and faDirectory) = 0 then
         begin
           Ext := LowerCase(ExtractFileExt(SearchRec.Name));
-          if (Ext = '.png') or (Ext = '.jpg') or (Ext = '.jpeg') or (Ext = '.bmp') or (Ext = '.gif') then
+          if (Ext = '.png') or (Ext = '.jpg') or (Ext = '.jpeg') or (Ext = '.bmp') then
             Result.Add(AFolder + '\' + SearchRec.Name);
         end;
       until FindNext(SearchRec) <> 0;
@@ -52,8 +57,8 @@ begin
 end;
 
 function TdmProcessing.ProcessCreateICO(ADirectory, AOutputFile: string;
-  AUniqueSizes: Boolean; AOnProgress: TProc<Integer, string>;
-  AOnComplete: TProc): Integer;
+  AUniqueSizes: Boolean; AOnProgress: TOnProgressEvent;
+  AOnComplete: TOnCompleteEvent): Integer;
 var
   slFileList : TStringList;
   trThread : TMakeICOThread;
@@ -65,7 +70,7 @@ begin
 end;
 
 function TdmProcessing.ProcessResize(ADirectory: string; ANewWidth,
-  ANewHeight: Integer; ARewriteExisting : Boolean; AOnProgress: TProc<Integer, string>; AOnComplete: TProc) : Integer;
+  ANewHeight: Integer; ARewriteExisting : Boolean; AOnProgress: TOnProgressEvent; AOnComplete: TOnCompleteEvent) : Integer;
 var
   slFileList : TStringList;
   trThread : TResizeThread;

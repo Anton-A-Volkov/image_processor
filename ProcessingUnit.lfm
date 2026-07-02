@@ -1,0 +1,7 @@
+object dmProcessing: TdmProcessing
+  OldCreateOrder = False
+  Height = 480
+  HorizontalOffset = 0
+  VerticalOffset = 0
+  Width = 640
+end
